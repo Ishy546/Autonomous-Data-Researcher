@@ -1,8 +1,0 @@
-{
-  "dependencies": {
-    "@langchain/core": "^0.3.72",
-    "@tavily/core": "^0.5.11",
-    "dotenv": "^17.2.2",
-    "langchain": "^0.3.31"
-  }
-}
