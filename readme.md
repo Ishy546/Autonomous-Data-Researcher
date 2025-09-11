@@ -1,3 +1,3 @@
-This is basically an ai agent that searches the web and answers queries via tavily api. The ai agent has access to functions like searchWeb (with tavily), planner (decompose the question into sub questions via langchain), and ranker and writer nodes via openai. 
+This is basically an ai agent that searches the web and answers queries via tavily api. The ai agent has access to functions like search (with tavily api for deep web search), planner (decompose the question into sub questions via langchain), and ranker and writer nodes via openai. 
 
-Shoutout to the best article on tavily api, would not have been able to build this without it: https://medium.com/@abdibrokhim/how-to-give-your-ai-agents-real-time-search-superpowers-with-tavily-c21fd8aa8cb7
+Shoutout to the best article on tavily api for js, would not have been able to build this without it: https://medium.com/@abdibrokhim/how-to-give-your-ai-agents-real-time-search-superpowers-with-tavily-c21fd8aa8cb7

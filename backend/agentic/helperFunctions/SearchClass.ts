@@ -1,6 +1,4 @@
 import { TavilySearchOptions, TavilySearchResponse } from "@tavily/core";
-import dotenv from "dotenv"
-dotenv.config()
 
 export class TavilyService {
   private apiKey = process.env.TAVILY_API_KEY

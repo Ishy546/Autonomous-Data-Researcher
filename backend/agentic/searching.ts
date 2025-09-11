@@ -2,10 +2,29 @@ import { TavilyService } from "./helperFunctions/SearchClass";
 import { TavilySearchOptions } from "@tavily/core";
 const tavilyService = new TavilyService();
 
-async function handleSearchFunction(args: TavilySearchOptions) {// object with at least query string
+export default async function handleSearchFunction(args: TavilySearchOptions |  {queries: string[]}) {// object with at least query string
   try {
-    // Validate inputs
-    if (!args.query || typeof args.query !== "string") {
+    if ("queries" in args && Array.isArray(args.queries)) {
+      // Batch mode
+      const batchResults = await tavilyService.batchSearch(args.queries, {
+        search_depth: "basic",
+        max_results: 5,
+        include_answer: true
+      });
+
+      return {
+        success: true,
+        batch: true,
+        results: batchResults.map((res, i) => ({
+          query: args.queries[i],
+          ...res,
+          formatted_results: "results" in res ? tavilyService.formatSearchResults(res) : res.error
+        }))
+      };
+    }
+
+    // Single query mode
+    if (!("query" in args) || typeof args.query !== "string") {
       throw new Error("Query parameter is required and must be a string");
     }
 

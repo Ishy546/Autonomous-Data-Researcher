@@ -1,6 +1,6 @@
 import { openai } from "../agent";
 
-export async function rankResults(
+export default async function rankResults(
   query: string,
   results: { title: string; content: string; url?: string }[],
   topN: number = 5

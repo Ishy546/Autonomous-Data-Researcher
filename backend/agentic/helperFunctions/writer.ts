@@ -1,6 +1,6 @@
 import { openai } from "../agent";
 
-export async function writer(
+export default async function writer(
   query: string,
   rankedResults: { title: string; content: string; url?: string }[],
   style: "concise" | "detailed" = "concise"

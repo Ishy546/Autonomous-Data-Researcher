@@ -24,6 +24,10 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "langchain": "^0.3.31"
+    "langchain": "^0.3.31",
+    "typescript": "^5.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.1"
   }
 }
