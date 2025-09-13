@@ -1,9 +1,9 @@
 import OpenAI from "openai"
-import { ChatCompletionFunctionTool, ChatCompletionMessageParam } from "openai/resources/index.mjs"
-import { planner } from "./helperFunctions/Planner"
-import handleSearchFunction from "./searching"
-import rankResults from "./helperFunctions/ranker"
-import writer from "./helperFunctions/writer"
+import type { ChatCompletionContentPart, ChatCompletionContentPartRefusal, ChatCompletionContentPartText, ChatCompletionFunctionTool, ChatCompletionMessageParam } from "openai/resources/index.mjs"
+import { planner } from "./helperFunctions/Planner.js"
+import handleSearchFunction from "./searching.js"
+import rankResults from "./helperFunctions/ranker.js"
+import writer from "./helperFunctions/writer.js"
 
 export const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY
@@ -164,57 +164,96 @@ const tools: ChatCompletionFunctionTool[] = [
 ];
 
 
+function normalizeContent(
+  content: string | ChatCompletionContentPart[] | (ChatCompletionContentPartText | ChatCompletionContentPartRefusal)[]
+): string {
+  if (typeof content === "string") {
+    return content;
+  }
+  if (Array.isArray(content)) {
+    return content
+      .map((part) => {
+        if (typeof part === "string") return part;
+        if ("text" in part) return part.text;
+        if ("refusal" in part) return `[Refusal]: ${part.refusal}`;
+        return "";
+      })
+      .join(" ");
+  }
+  return "";
+}
 
 
 
+export async function agent(query: string): Promise<string> {
+  if (typeof query !== "string" || !query) {
+    throw new Error("invalid query");
+  }
 
-async function agent(query: string) {
-    if (typeof query !== "string" || !query) {
-        throw Error("invalid query") 
-        return
+  const messages: ChatCompletionMessageParam[] = [
+    {
+      role: "system",
+      content:
+        "You are a helpful AI agent. Give highly specific answers based on the information you're provided. Prefer to gather information with the tools provided to you rather than giving basic, generic answers.",
+    },
+    { role: "user", content: query },
+  ];
+
+  const MAX_ITERATIONS = 5;
+
+  for (let i = 0; i < MAX_ITERATIONS; i++) {
+    console.log(`Iteration #${i + 1}`);
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-5-nano",
+      messages,
+      tools,
+    });
+
+    const choice = response.choices[0];
+    if (!choice) {
+      console.error("No choice returned");
+      break;
     }
-    const messages: ChatCompletionMessageParam[] = [
-        { role: "system", content: "You are a helpful AI agent. Give highly specific answers based on the information you're provided. Prefer to gather information with the tools provided to you rather than giving basic, generic answers." },
-        { role: "user", content: query }
-    ]
 
-    const MAX_ITERATIONS = 5
+    const finishReason = choice.finish_reason;
+    const message = choice.message;
+    const toolCalls = message.tool_calls;
 
-    for (let i = 0; i < MAX_ITERATIONS; i++) {
-        console.log(`Iteration #${i + 1}`)
-        const response = await openai.chat.completions.create({
-            model: "gpt-5-nano",
-            messages,
-            tools
-        })
+    messages.push(message);
 
-        const { finish_reason: finishReason, message } = response.choices[0]
-        const { tool_calls: toolCalls } = message
-        console.log(toolCalls)
-        
-        messages.push(message)
-        
-        if (finishReason === "stop") {
-            console.log(message.content)
-            console.log("AGENT ENDING")
-            return
-        } else if (finishReason === "tool_calls") {
-            for (const toolCall of toolCalls ?? []) {
-                if (toolCall.type === "function"){
-                const functionName = toolCall.function.name
-                const functionToCall = availableFunctions[functionName]
-                const functionArgs = JSON.parse(toolCall.function.arguments)
-                const functionResponse = await functionToCall(functionArgs)
-                console.log(functionResponse)
-                messages.push({
-                    tool_call_id: toolCall.id,
-                    role: "tool",
-                    content: functionResponse
-                })
-              }
-            }
+    if (finishReason === "stop") {
+      console.log("AGENT ENDING");
+      return message.content ?? ""; // <-- Return the string here
+    } else if (finishReason === "tool_calls") {
+      for (const toolCall of toolCalls ?? []) {
+        if (toolCall.type === "function") {
+          const functionName = toolCall.function.name;
+          const functionToCall = availableFunctions[functionName];
+
+          if (!functionToCall) {
+            console.error(`No function found for: ${functionName}`);
+            continue;
+          }
+
+          const functionArgs = JSON.parse(toolCall.function.arguments);
+          const functionResponse = await functionToCall(functionArgs);
+
+          console.log(functionResponse);
+
+          messages.push({
+            tool_call_id: toolCall.id,
+            role: "tool",
+            content: functionResponse,
+          });
         }
+      }
     }
+  }
+
+  // If agent finishes all iterations without a stop reason
+  const lastMessage = messages[messages.length - 1];
+  return normalizeContent(lastMessage?.content ?? "");
 }
 
 await agent("What's the current weather in my current location?")

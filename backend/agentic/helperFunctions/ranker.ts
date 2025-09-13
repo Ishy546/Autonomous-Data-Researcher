@@ -1,4 +1,4 @@
-import { openai } from "../agent";
+import { openai } from "../agent.js";
 
 export default async function rankResults(
   query: string,
@@ -33,7 +33,7 @@ ${results
     ],
   });
 
-  const text = response.choices[0].message?.content ?? "[]";
+  const text = response.choices[0]!.message?.content ?? "[]";
 
   try {
     return JSON.parse(text);

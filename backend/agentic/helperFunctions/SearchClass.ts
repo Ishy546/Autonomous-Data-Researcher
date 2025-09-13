@@ -1,4 +1,4 @@
-import { TavilySearchOptions, TavilySearchResponse } from "@tavily/core";
+import type { TavilySearchOptions, TavilySearchResponse } from "@tavily/core";
 
 export class TavilyService {
   private apiKey = process.env.TAVILY_API_KEY

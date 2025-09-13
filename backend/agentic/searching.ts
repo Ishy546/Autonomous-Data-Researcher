@@ -1,5 +1,5 @@
-import { TavilyService } from "./helperFunctions/SearchClass";
-import { TavilySearchOptions } from "@tavily/core";
+import { TavilyService } from "./helperFunctions/SearchClass.js";
+import type { TavilySearchOptions } from "@tavily/core";
 const tavilyService = new TavilyService();
 
 export default async function handleSearchFunction(args: TavilySearchOptions |  {queries: string[]}) {// object with at least query string

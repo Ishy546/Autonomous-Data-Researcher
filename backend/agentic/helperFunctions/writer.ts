@@ -1,4 +1,4 @@
-import { openai } from "../agent";
+import { openai } from "../agent.js";
 
 export default async function writer(
   query: string,
@@ -38,5 +38,5 @@ ${rankedResults
     temperature: 0.5, // some creativity but still grounded
   });
 
-  return response.choices[0].message?.content?.trim() ?? "No answer generated.";
+  return response.choices[0]!.message?.content?.trim() ?? "No answer generated.";
 }
