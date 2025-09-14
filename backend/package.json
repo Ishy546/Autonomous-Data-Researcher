@@ -2,11 +2,10 @@
   "name": "autonomous-data-researcher",
   "version": "1.0.0",
   "description": "Building an ai agent to search the website",
-  "main": "server.js",
-  "type": "module",
+  "main": "ts-node server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "npx ts-node server.ts"
   },
   "repository": {
     "type": "git",
@@ -24,12 +23,13 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "langchain": "^0.3.31",
-    "typescript": "^5.9.2"
+    "langchain": "^0.3.31"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
-    "@types/node": "^24.3.1"
+    "@types/node": "^24.3.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }

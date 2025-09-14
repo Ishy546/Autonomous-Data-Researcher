@@ -1,10 +1,11 @@
+import * as dotenv from "dotenv";
+import path from "node:path";
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 import express, { Request, Response } from "express"
 import cors from "cors"  
-import { agent } from "./agentic/agent.js"
-
+import { agent } from "./agentic/agent"
 const PORT = 8000
 const app = express()
-
 app.use(cors())
 app.use(express.json())
 

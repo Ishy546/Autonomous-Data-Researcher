@@ -25,8 +25,8 @@ Other: Modular tool design for planner, search, ranker, and writer function
 
 Clone the repo:
 
-git clone https://github.com/yourusername/ai-research-agent.git
-cd ai-research-agent
+git clone https://github.com/Ishy546/Autonomous-Data-Researcher.git
+cd Autonomous-Data-Researcher
 
 Install dependencies:
 npm install
@@ -47,7 +47,6 @@ curl -X POST http://localhost:8000/research \
 
 Input:
 What’s the current weather in my location?
-
 
 Output (simplified):
 {

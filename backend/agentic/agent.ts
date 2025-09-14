@@ -1,13 +1,10 @@
-import OpenAI from "openai"
 import type { ChatCompletionContentPart, ChatCompletionContentPartRefusal, ChatCompletionContentPartText, ChatCompletionFunctionTool, ChatCompletionMessageParam } from "openai/resources/index.mjs"
-import { planner } from "./helperFunctions/Planner.js"
-import handleSearchFunction from "./searching.js"
-import rankResults from "./helperFunctions/ranker.js"
-import writer from "./helperFunctions/writer.js"
+import planner from "./helperFunctions/Planning"
+import handleSearchFunction from "./searching"
+import rankResults from "./helperFunctions/ranker"
+import writer from "./helperFunctions/writer"
 
-export const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
-})
+import { openai } from "./helperFunctions/client"
 
 const availableFunctions: Record<string, (args: any) => Promise<any>> = {
     planner,
@@ -53,11 +50,11 @@ const tools: ChatCompletionFunctionTool[] = [
       properties: {
         query: {
           type: "string",
-          description: "A single search query to look up."
+          description: "A single search query to look up. Use this OR 'queries'."
         },
         queries: {
           type: "array",
-          description: "An array of queries to run in batch mode.",
+          description: "An array of queries to run in batch mode. Use this OR 'query'.",
           items: {
             type: "string"
           }
@@ -67,10 +64,9 @@ const tools: ChatCompletionFunctionTool[] = [
           description: "Whether to include a summarized answer in the response (default: true)."
         }
       },
-      oneOf: [
-        { required: ["query"] },
-        { required: ["queries"] }
-      ]
+      // Only "required" if you truly want at least one,
+      // but you cannot enforce mutual exclusivity in OpenAI’s schema
+      required: []
     }
   }
 }, {
@@ -256,4 +252,4 @@ export async function agent(query: string): Promise<string> {
   return normalizeContent(lastMessage?.content ?? "");
 }
 
-await agent("What's the current weather in my current location?")
+// await agent("What's the current weather in my current location?")

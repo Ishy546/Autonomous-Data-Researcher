@@ -1,11 +1,7 @@
-import { ChatOpenAI } from "@langchain/openai";
 import { BaseMessage } from "@langchain/core/messages";
+import { llm } from "./client";
 
-const llm = new ChatOpenAI({
-  model: "gpt-5-nano",
-})
-
-export async function planner(userQuestion: string): Promise<string[]> {// returns ['s1', 's2', 's3']
+export default async function planner(userQuestion: string): Promise<string[]> {// returns ['s1', 's2', 's3']
   const currentDate = new Date().toLocaleString("en-US", {
     month: "long",
     year: "numeric"

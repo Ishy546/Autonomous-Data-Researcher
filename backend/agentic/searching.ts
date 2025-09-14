@@ -1,4 +1,4 @@
-import { TavilyService } from "./helperFunctions/SearchClass.js";
+import { TavilyService } from "./helperFunctions/SearchClass";
 import type { TavilySearchOptions } from "@tavily/core";
 const tavilyService = new TavilyService();
 

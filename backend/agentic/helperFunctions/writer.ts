@@ -1,4 +1,4 @@
-import { openai } from "../agent.js";
+import { openai } from "./client";
 
 export default async function writer(
   query: string,
