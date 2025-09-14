@@ -54,4 +54,9 @@ Output (simplified):
   "answer": "It is currently 72°F and sunny in New Brunswick, NJ."
 }
 
+Example Pictures: 
+![alt text](image.png) 
+
+![alt text](image-1.png)
+
 Shoutout to the best article on tavily api for js, would not have been able to build this without it: https://medium.com/@abdibrokhim/how-to-give-your-ai-agents-real-time-search-superpowers-with-tavily-c21fd8aa8cb7
