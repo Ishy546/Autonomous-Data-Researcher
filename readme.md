@@ -36,7 +36,7 @@ OPENAI_API_KEY=your-key
 TAVILY_API_KEY=your-key
 
 Run the server:
-npm run dev
+npm start
 
 Make a request:
 curl -X POST http://localhost:8000/research \
